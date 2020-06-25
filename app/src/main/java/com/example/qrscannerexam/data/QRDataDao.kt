@@ -1,14 +1,19 @@
 package com.example.qrscannerexam.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.lifecycle.LiveData
+import androidx.room.*
 
 @Dao
 interface QRDataDao {
     @Query("SELECT * FROM QRData")
-    fun getAll(): List<QRData>
+    fun getAll(): LiveData<List<QRData>>
 
     @Insert
-    fun insertAll(vararg qrs: QRData)
+    fun insert(qrs: QRData)
+
+    @Update
+    fun update(qrs: QRData)
+
+    @Delete
+    fun delete(qrs: QRData)
 }

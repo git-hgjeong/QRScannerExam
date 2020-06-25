@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(QRData::class), version = 1)
+@Database(entities = [QRData::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun qrDataDao(): QRDataDao
 

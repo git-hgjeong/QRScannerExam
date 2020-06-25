@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class QRData(
-    @PrimaryKey(autoGenerate = true) val uid: Int,
-    @ColumnInfo(name = "qr_data") val qrData: String?
-)
+    var data: String
+){
+    @PrimaryKey(autoGenerate = true) var uid: Int = 0
+}
