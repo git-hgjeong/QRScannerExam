@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:text="Button" />
+        android:text="Get QR-Code" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rView"
