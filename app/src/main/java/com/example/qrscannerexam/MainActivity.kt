@@ -35,13 +35,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        rView.adapter = SearchAdapter()
+        val reAdapter = SearchAdapter()
+        rView.adapter = reAdapter
         rView.layoutManager = LinearLayoutManager(this)
 
         val txtView : TextView = findViewById(R.id.txtResult)
         viewModel.getAll().observe(this, Observer {
             txtView.text = it.toString()
-
+            reAdapter.setItemData(it)
         })
 
         button.setOnClickListener {
@@ -77,11 +78,7 @@ class MainActivity : AppCompatActivity() {
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    var items: MutableList<SearchData> = mutableListOf(
-        SearchData("111","222"),
-        SearchData("333","444"),
-        SearchData("555","666")
-    )
+    var items: MutableList<SearchData> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.SearchViewHolder {
         return SearchViewHolder(parent)
@@ -98,6 +95,16 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
             }
         }
     }
+
+    fun setItemData(qrData:List<QRData>){
+        items.clear()
+        for((index, value) in qrData.withIndex()){
+            val sdata = SearchData(value.data, "")
+            items.add(sdata)
+        }
+        notifyDataSetChanged()
+    }
+
     inner class SearchViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_qr,parent,false)
     ){
