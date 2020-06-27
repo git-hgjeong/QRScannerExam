@@ -1,18 +1,28 @@
 package com.example.qrscannerexam
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.qrscannerexam.data.AppDatabase
 import com.example.qrscannerexam.data.QRData
 import com.google.zxing.integration.android.IntentIntegrator
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_qr.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -25,9 +35,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        rView.adapter = SearchAdapter()
+        rView.layoutManager = LinearLayoutManager(this)
+
         val txtView : TextView = findViewById(R.id.txtResult)
         viewModel.getAll().observe(this, Observer {
             txtView.text = it.toString()
+
         })
 
         button.setOnClickListener {
@@ -58,4 +72,37 @@ class MainActivity : AppCompatActivity() {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
 }
+
+class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+
+    var items: MutableList<SearchData> = mutableListOf(
+        SearchData("111","222"),
+        SearchData("333","444"),
+        SearchData("555","666")
+    )
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.SearchViewHolder {
+        return SearchViewHolder(parent)
+    }
+
+    override fun getItemCount(): Int {
+        return items.size
+    }
+
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
+        items[position].let {
+            with(holder){
+                ItemData.text = it.fullname
+            }
+        }
+    }
+    inner class SearchViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_qr,parent,false)
+    ){
+        val ItemData = itemView.textView
+    }
+}
+
+data class SearchData(val fullname:String, val quiz:String)
