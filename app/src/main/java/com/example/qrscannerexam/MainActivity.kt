@@ -39,9 +39,7 @@ class MainActivity : AppCompatActivity() {
         rView.adapter = reAdapter
         rView.layoutManager = LinearLayoutManager(this)
 
-        val txtView : TextView = findViewById(R.id.txtResult)
         viewModel.getAll().observe(this, Observer {
-            txtView.text = it.toString()
             reAdapter.setItemData(it)
         })
 
@@ -52,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
     // Get the results:
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val txtView : TextView = findViewById(R.id.txtResult)
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null) {
             if (result.contents == null) {

@@ -18,17 +18,9 @@
         android:id="@+id/rView"
         android:layout_width="match_parent"
         android:layout_height="390dp"
-        android:layout_above="@+id/txtResult"
+        android:layout_above="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp" />
-
-    <TextView
-        android:id="@+id/txtResult"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_above="@+id/button"
-        android:layout_marginBottom="0dp"
-        android:text="TextView" />
 
 </RelativeLayout>
