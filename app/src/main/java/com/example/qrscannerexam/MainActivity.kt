@@ -1,31 +1,28 @@
 package com.example.qrscannerexam
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import com.example.qrscannerexam.data.AppDatabase
 import com.example.qrscannerexam.data.QRData
+import com.example.qrscannerexam.rest.RestRetrofit
 import com.google.zxing.integration.android.IntentIntegrator
-import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_qr.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.qrscannerexam.rest.RestResult
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -51,7 +48,23 @@ class MainActivity : AppCompatActivity() {
         //클릭리스너 등록
         reAdapter.setItemClickListener( object : SearchAdapter.ItemClickListener{
             override fun onClick(view: View, position: Int) {
-                Log.d("SSS", "${position}번 리스트 선택 :" + view.textView.text.toString())
+                val qrStr = view.textView.text.toString()
+                Log.d("SSS", "${position}번 리스트 선택 :" + qrStr)
+
+                RestRetrofit.getService().saveData(data = qrStr).enqueue( object : Callback<RestResult>{
+                    override fun onFailure(call: Call<RestResult>, t: Throwable) {
+                        Log.d("debug", "Fail.")
+                    }
+                    override fun onResponse(call: Call<RestResult>, response: Response<RestResult>) {
+                        Log.d("debug", "Success.")
+                        Log.d("debug", response.toString())
+                        if (response.isSuccessful) {
+                            val ret = response.body()
+                            Log.d("debug", ret?.RESULT_MSG)
+                        }
+                    }
+                })
+
             }
         })
 
@@ -136,3 +149,4 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 }
 
 data class SearchData(val fullname:String, val quiz:String)
+
