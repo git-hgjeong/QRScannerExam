@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -46,6 +47,14 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener {
             IntentIntegrator(this).initiateScan();
         }
+
+        //클릭리스너 등록
+        reAdapter.setItemClickListener( object : SearchAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int) {
+                Log.d("SSS", "${position}번 리스트 선택 :" + view.textView.text.toString())
+            }
+        })
+
     }
 
     // Get the results:
@@ -77,6 +86,17 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     var items: MutableList<SearchData> = mutableListOf()
 
+    //클릭리스너 선언
+    private lateinit var itemClickListner: ItemClickListener
+    //클릭 인터페이스 정의
+    interface ItemClickListener {
+        fun onClick(view: View, position: Int)
+    }
+    //클릭리스너 등록 매소드
+    fun setItemClickListener(itemClickListener: ItemClickListener) {
+        this.itemClickListner = itemClickListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.SearchViewHolder {
         return SearchViewHolder(parent)
     }
@@ -90,6 +110,11 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
             with(holder){
                 ItemData.text = it.fullname
             }
+        }
+
+        //view에 onClickListner를 달고, 그 안에서 직접 만든 itemClickListener를 연결시킨다
+        holder.itemView.setOnClickListener {
+            itemClickListner.onClick(it, position)
         }
     }
 
@@ -106,6 +131,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
         LayoutInflater.from(parent.context).inflate(R.layout.item_qr,parent,false)
     ){
         val ItemData = itemView.textView
+
     }
 }
 
