@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 RestRetrofit.getService().saveData(data = qrStr).enqueue( object : Callback<RestResult>{
                     override fun onFailure(call: Call<RestResult>, t: Throwable) {
                         Log.d("debug", "Fail.")
+                        Toast.makeText(applicationContext, "Connect Fail", Toast.LENGTH_LONG).show()
                     }
                     override fun onResponse(call: Call<RestResult>, response: Response<RestResult>) {
                         Log.d("debug", "Success.")
@@ -61,6 +63,9 @@ class MainActivity : AppCompatActivity() {
                         if (response.isSuccessful) {
                             val ret = response.body()
                             Log.d("debug", ret?.RESULT_MSG)
+                            Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
+                        }else{
+                            Toast.makeText(applicationContext, "Fail Response.", Toast.LENGTH_LONG).show()
                         }
                     }
                 })
